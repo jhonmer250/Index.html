@@ -132,8 +132,10 @@
       /* MODAL DE INICIO CON MARCA DE AGUA */
       .modal {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         background: rgba(0,0,0,0.5);
         display: flex;
         justify-content: center;
@@ -145,14 +147,18 @@
         background: rgba(255,255,255,0.95);
         padding: 20px;
         border-radius: 8px;
-        width: 90%; max-width: 400px;
+        width: 90%;
+        max-width: 400px;
         text-align: center;
         overflow: hidden;
       }
       .modal-content::before {
         content: "";
         position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background: url("images/stage7.png") center center no-repeat;
         background-size: cover;
         opacity: 0.1;
@@ -173,19 +179,6 @@
         text-align: center;
         margin: 10px 0 30px 0;
         color: #555;
-      }
-      /* Selección de Categoría */
-      .modal-content .category-select {
-        margin: 10px 0;
-        text-align: left;
-      }
-      .modal-content .category-select label {
-        font-weight: bold;
-      }
-      .modal-content .category-select select {
-        width: 100%;
-        padding: 8px;
-        font-size: 16px;
       }
       .modal-content input[type="text"],
       .modal-content select {
@@ -259,9 +252,7 @@
         font-size: 18px;
         font-weight: bold;
       }
-      #instagramBanner a:hover {
-        text-decoration: underline;
-      }
+      #instagramBanner a:hover { text-decoration: underline; }
       
       /* BOTÓN TOGGLE DARK MODE CON EMOTICONOS */
       #darkModeToggle {
@@ -278,19 +269,11 @@
       
       /* MEDIA QUERIES */
       @media (max-width: 600px) {
-        .welcome-title {
-          font-size: 36px;
-        }
-        .subtitle {
-          font-size: 18px;
-        }
-        .word {
-          font-size: 22px;
-        }
+        .welcome-title { font-size: 36px; }
+        .subtitle { font-size: 18px; }
+        .word { font-size: 22px; }
         #keyboardContainer button {
-          width: 35px;
-          font-size: 14px;
-          padding: 8px 10px;
+          width: 35px; font-size: 14px; padding: 8px 10px;
         }
       }
     </style>
@@ -309,7 +292,7 @@
       <div class="modal-content">
         <h2>Tutorial</h2>
         <p>Bienvenido al juego de Ahorcado en la Farmacia Charallave.</p>
-        <p>Utiliza el teclado en pantalla o físico para adivinar la palabra.</p>
+        <p>Utiliza el teclado en pantalla o el físico para adivinar la palabra.</p>
         <p>La pista se mostrará arriba de la imagen; trata de acertar sin errores.</p>
         <button onclick="closeTutorial()">¡Entendido!</button>
       </div>
@@ -320,14 +303,6 @@
       <div class="modal-content">
         <h1 class="welcome-title">BIENVENIDO</h1>
         <p class="subtitle">Juego de Farmacia Charallave</p>
-        <!-- Selección de Categoría -->
-        <div class="category-select">
-          <label for="categorySelect">Categoría:</label>
-          <select id="categorySelect">
-            <option value="medicamentos">Medicamentos</option>
-            <option value="laboratorios">Laboratorios</option>
-          </select>
-        </div>
         <form id="startForm">
           <div>
             <label>Modo de Juego:</label><br />
@@ -355,7 +330,7 @@
       </div>
     </div>
     
-    <!-- Contenedor Principal (después de iniciar) -->
+    <!-- Contenedor Principal (aparece después de iniciar) -->
     <div class="container" id="gameContainer" style="display: none;">
       <div class="game-area">
         <h1>Juego de Ahorcado en la Farmacia</h1>
@@ -375,7 +350,7 @@
         <div class="scoreboard">
           <p id="scoreBoard">Victorias: 0 | Derrotas: 0</p>
         </div>
-        <!-- Controles de Ronda -->
+        <!-- Controles de Ronda: Solo aparecen al finalizar cada palabra -->
         <div id="roundControls">
           <button id="nextButton" onclick="nextRound()">Siguiente</button>
           <button id="restartButton" onclick="restartGame()">Reiniciar Partida</button>
@@ -422,7 +397,7 @@
       let totalGames = 0, totalWins = 0, totalLosses = 0, totalTimeSpent = 0;
       let totalScore = 0; // Puntaje acumulativo
 
-      // Botón Toggle Dark Mode con emoticonos
+      // Toggle Dark Mode con emoticonos
       function toggleDarkMode() {
         document.body.classList.toggle("dark-mode");
         const btn = document.getElementById("darkModeToggle");
@@ -442,7 +417,7 @@
         const table = document.getElementById("recordsTable");
         let rows = "<tr><th>Nombre</th><th>Puntaje</th><th>Fecha</th></tr>";
         records.forEach(r => {
-          // Se añaden atributos de datos para ver detalles al hacer clic en el nombre
+          // Se incluyen atributos de datos para ver detalles al hacer clic en el nombre
           rows += `<tr>
             <td class="recordName" 
                 data-recordname="${r.name}"
@@ -457,7 +432,7 @@
           </tr>`;
         });
         table.innerHTML = rows;
-        // Asigna evento click para ver detalle del récord
+        // Asigna evento click para ver detalle del record
         let recordElems = document.getElementsByClassName("recordName");
         for (let i = 0; i < recordElems.length; i++) {
           recordElems[i].addEventListener("click", showRecordDetail);
@@ -564,71 +539,80 @@
       /* Clase principal del Juego */
       class HangmanGame {
         constructor(options) {
-          this.mode = options.mode;
-          this.difficulty = options.difficulty;
+          this.mode = options.mode; // "singleplayer" o "multiplayer"
+          this.difficulty = options.difficulty; // "facil", "medio", "dificil", "super facil"
           this.customWord = options.customWord || "";
           this.customHint = options.customHint || "";
-          // Se obtiene la categoría del select (medicamentos o laboratorios)
-          this.category = document.getElementById("categorySelect").value;
-          if (this.category === "medicamentos") {
-            this.words = [
-              "atamel", "longacef", "miovit", "colypan", "aciclovir",
-              "alpram", "levotiroxina", "candesartan", "propofol", "prurica",
-              "paracetamol", "ibuprofeno", "amoxicilina", "omeprazol", "dipirona",
-              "metformina", "captopril", "simvastatina", "loratadina", "azitromicina"
-            ];
-            this.hints = {
-              atamel: "Se usa para aliviar dolores leves a moderados.",
-              longacef: "Antibiótico para infecciones respiratorias.",
-              miovit: "Suplemento vitamínico para el organismo.",
-              colypan: "Se usa para tratar la hipertensión.",
-              aciclovir: "Combate infecciones por el herpes.",
-              alpram: "Tratamiento para crisis de ansiedad y epilepsia.",
-              levotiroxina: "Esencial para tratar el hipotiroidismo.",
-              candesartan: "Controla la presión arterial alta.",
-              propofol: "Anestésico para procedimientos médicos.",
-              prurica: "Alivia el prurito en afecciones cutáneas.",
-              paracetamol: "Alivia el dolor y reduce la fiebre.",
-              ibuprofeno: "Antiinflamatorio y analgésico.",
-              amoxicilina: "Antibiótico para diversas infecciones bacterianas.",
-              omeprazol: "Reduce la acidez estomacal y trata úlceras.",
-              dipirona: "Antipirético y analgésico para fiebre.",
-              metformina: "De primera línea para la diabetes tipo 2.",
-              captopril: "Reduce la presión arterial al inhibir la ACE.",
-              simvastatina: "Disminuye el colesterol en la sangre.",
-              loratadina: "Antihistamínico contra alergias.",
-              azitromicina: "Antibiótico para infecciones respiratorias."
-            };
-          } else { // categoría laboratorios
-            this.words = [
-              "Aless", "DAC55", "Pfizer", "Genven", "Leti", "Elter", "Cofasa",
-              "Labtec", "Biolabs", "Medilab", "Novafarma", "FarmaPlus",
-              "Vitalab", "Quimifarma", "Pharmex", "SaniFarma", "BioGen",
-              "Laboratorio Vega", "SaludLab", "InnovaFarma"
-            ];
-            this.hints = {
-              Aless: "https://via.placeholder.com/150?text=Aless",
-              DAC55: "https://via.placeholder.com/150?text=DAC55",
-              Pfizer: "https://via.placeholder.com/150?text=Pfizer",
-              Genven: "https://via.placeholder.com/150?text=Genven",
-              Leti: "https://via.placeholder.com/150?text=Leti",
-              Elter: "https://via.placeholder.com/150?text=Elter",
-              Cofasa: "https://via.placeholder.com/150?text=Cofasa",
-              Labtec: "https://via.placeholder.com/150?text=Labtec",
-              Biolabs: "https://via.placeholder.com/150?text=Biolabs",
-              Medilab: "https://via.placeholder.com/150?text=Medilab",
-              Novafarma: "https://via.placeholder.com/150?text=Novafarma",
-              FarmaPlus: "https://via.placeholder.com/150?text=FarmaPlus",
-              Vitalab: "https://via.placeholder.com/150?text=Vitalab",
-              Quimifarma: "https://via.placeholder.com/150?text=Quimifarma",
-              Pharmex: "https://via.placeholder.com/150?text=Pharmex",
-              SaniFarma: "https://via.placeholder.com/150?text=SaniFarma",
-              BioGen: "https://via.placeholder.com/150?text=BioGen",
-              "Laboratorio Vega": "https://via.placeholder.com/150?text=Laboratorio+Vega",
-              SaludLab: "https://via.placeholder.com/150?text=SaludLab",
-              InnovaFarma: "https://via.placeholder.com/150?text=InnovaFarma"
-            };
+          switch (this.difficulty) {
+            case "facil":
+              this.maxAttempts = 8;
+              this.turnTime = 15;
+              this.alwaysShowHint = true;
+              break;
+            case "medio":
+              this.maxAttempts = 6;
+              this.turnTime = 10;
+              this.alwaysShowHint = false;
+              break;
+            case "dificil":
+              this.maxAttempts = 4;
+              this.turnTime = 7;
+              this.alwaysShowHint = false;
+              break;
+            case "super facil":
+              this.maxAttempts = 8;
+              this.turnTime = 0;
+              this.alwaysShowHint = true;
+              break;
+            default:
+              this.maxAttempts = 6;
+              this.turnTime = 10;
+              this.alwaysShowHint = false;
           }
+          this.words = [
+            "atamel",
+            "longacef",
+            "miovit",
+            "colypan",
+            "aciclovir",
+            "alpram",
+            "levotiroxina",
+            "candesartan",
+            "propofol",
+            "prurica",
+            "paracetamol",
+            "ibuprofeno",
+            "amoxicilina",
+            "omeprazol",
+            "dipirona",
+            "metformina",
+            "captopril",
+            "simvastatina",
+            "loratadina",
+            "azitromicina"
+          ];
+          this.hints = {
+            atamel: "Alivia dolores leves a moderados.",
+            longacef: "Antibiótico para infecciones respiratorias.",
+            miovit: "Suplemento vitamínico para el organismo.",
+            colypan: "Se usa para tratar la hipertensión.",
+            aciclovir: "Combate infecciones por el herpes.",
+            alpram: "Para crisis de ansiedad y epilepsia.",
+            levotiroxina: "Esencial en el hipotiroidismo.",
+            candesartan: "Controla la presión arterial alta.",
+            propofol: "Anestésico para procedimientos médicos.",
+            prurica: "Alivia el prurito en afecciones cutáneas.",
+            paracetamol: "Alivia el dolor y reduce la fiebre.",
+            ibuprofeno: "Antiinflamatorio y analgésico.",
+            amoxicilina: "Para diversas infecciones bacterianas.",
+            omeprazol: "Reduce la acidez estomacal y trata úlceras.",
+            dipirona: "Antipirético y analgésico para fiebre.",
+            metformina: "De primera línea para la diabetes tipo 2.",
+            captopril: "Reduce la presión arterial al inhibir la ACE.",
+            simvastatina: "Disminuye el colesterol en la sangre.",
+            loratadina: "Antihistamínico contra alergias.",
+            azitromicina: "Antibiótico para infecciones respiratorias."
+          };
           this.availableWords = [...this.words];
           this.wins = 0;
           this.losses = 0;
@@ -648,7 +632,6 @@
             this.availableWords.splice(idx, 1);
             this.currentHint = this.hints[this.word];
           } else {
-            // Para multijugador se usa la palabra personalizada
             this.word = this.customWord.toLowerCase();
             this.currentHint = this.customHint;
           }
@@ -670,12 +653,7 @@
           this.updateHangmanImage();
           this.setMessage("");
           document.getElementById("currentScoreDisplay").textContent = "";
-          // Dependiendo de la categoría, se muestra el clue de forma adecuada
-          if (this.category === "laboratorios") {
-            document.getElementById("hintDisplay").innerHTML = '<img src="' + this.currentHint + '" alt="' + this.word + '" style="max-width:150px;"/>';
-          } else {
-            document.getElementById("hintDisplay").textContent = this.alwaysShowHint ? this.currentHint : "";
-          }
+          document.getElementById("hintDisplay").textContent = this.alwaysShowHint ? this.currentHint : "";
           resetKeyboard();
           if (this.turnTime > 0) {
             if (!document.getElementById("tutorialModal").style.display || document.getElementById("tutorialModal").style.display === "none") {
@@ -714,6 +692,7 @@
           if (!this.guessedWord.includes("_")) {
             img.src = "images/stage7.png";
           } else {
+            // En otros estados, se puede actualizar la imagen según los intentos (manteniendo la lógica original)
             img.src = `images/stage${this.attempts}.png`;
           }
           img.classList.add("animate-fadein");
@@ -760,17 +739,14 @@
             this.updateHangmanImage();
             document.getElementById("audio-wrong").play();
             if (!this.alwaysShowHint && !this.hintShown && this.attempts >= 3 && this.mode === "singleplayer") {
-              if (this.category === "laboratorios") {
-                document.getElementById("hintDisplay").innerHTML = '<img src="' + this.currentHint + '" alt="' + this.word + '" style="max-width:150px;"/>';
-              } else {
-                document.getElementById("hintDisplay").textContent = this.currentHint;
-              }
+              document.getElementById("hintDisplay").textContent = this.currentHint;
               this.hintShown = true;
             }
             if (this.attempts === this.maxAttempts) {
               this.currentScore = 0;
-              // Muestra mensaje "AHORCADO GAME OVER"
+              // En caso de perder se muestra el mensaje "AHORCADO GAME OVER"
               this.setMessage("AHORCADO GAME OVER");
+              // No se cambia la imagen, se mantiene la que tenía antes o se deja la última imagen
               this.losses++;
               this.updateScoreBoard();
               document.getElementById("currentScoreDisplay").textContent = `Puntaje acumulado: ${totalScore}`;
@@ -806,7 +782,10 @@
               this.setMessage("¡Tiempo agotado! Se cuenta como error.");
               let dummy = "z";
               for (let l of alphabet) {
-                if (!this.guessedWord.includes(l) && !this.wrongLetters.includes(l)) { dummy = l; break; }
+                if (!this.guessedWord.includes(l) && !this.wrongLetters.includes(l)) {
+                  dummy = l;
+                  break;
+                }
               }
               this.submitGuess(dummy);
             }
@@ -836,8 +815,6 @@
         e.preventDefault();
         const mode = document.querySelector('input[name="mode"]:checked').value;
         const difficulty = document.getElementById("difficultySelect").value;
-        // Se obtiene la categoría del select
-        const category = document.getElementById("categorySelect").value;
         let customWord = "", customHint = "";
         if (mode === "multiplayer") {
           customWord = document.getElementById("multiplayerWord").value.trim();
@@ -854,14 +831,13 @@
         } else if (game && game.turnTime > 0) {
           game.startTurnTimer();
         }
-        game = new HangmanGame({ mode, difficulty, customWord, customHint });
         buildKeyboard();
+        game = new HangmanGame({ mode, difficulty, customWord, customHint });
       });
 
       document.querySelectorAll('input[name="mode"]').forEach(radio => {
         radio.addEventListener("change", function() {
-          document.getElementById("multiplayerFields").style.display =
-            this.value === "multiplayer" ? "block" : "none";
+          document.getElementById("multiplayerFields").style.display = this.value === "multiplayer" ? "block" : "none";
         });
       });
 
@@ -871,9 +847,7 @@
           const btn = document.getElementById("key_" + letter);
           if (btn && !btn.disabled) {
             btn.disabled = true;
-            if (game) {
-              game.submitGuess(letter);
-            }
+            if (game) { game.submitGuess(letter); }
           }
         }
       });
